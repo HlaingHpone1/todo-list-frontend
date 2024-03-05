@@ -6,9 +6,9 @@ function App() {
     return (
         <BrowserRouter>
             <div className="h-screen flex items-center">
-                <Link to="/">Home</Link>
+                {/* <Link to="/">Home</Link>
                 <Link to="/category">Category</Link>
-                <Link to="/task">Task</Link>
+                <Link to="/task">Task</Link> */}
 
                 <div className="w-[500px] mx-auto">
                     <Router />

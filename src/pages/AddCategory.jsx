@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { AddCategoryButton } from "../components/btn/Button";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const AddCategory = () => {
     const [inputData, setInputData] = useState({
         name: "",
-        image: null,
+        image: "",
     });
 
     const categoryInputHandler = (e) => {
@@ -18,7 +19,7 @@ const AddCategory = () => {
     };
 
     const categoryImageHandler = (e) => {
-        const file = e.target.files[0].name;
+        const file = e.target.value;
         setInputData({
             ...inputData,
             image: file,
@@ -33,6 +34,13 @@ const AddCategory = () => {
     };
 
     console.log(inputData);
+
+    const apiUrl = "http://localhost:8080/categories";
+
+    // await axios.post(apiUrl, {name: inputData.name, imageUrl: inputData.image})
+    // .then(value => console.log(value));
+
+    return;
 
     return (
         <div className="bg-slate-200 p-10 shadow-lg rounded-2xl">
@@ -54,21 +62,6 @@ const AddCategory = () => {
                     <div className="input-group mb-5">
                         <label
                             className="block font-semibold mb-3 text-lg"
-                            htmlFor="img"
-                        >
-                            Image For Category
-                        </label>
-                        <input
-                            className="block w-full file:py-2.5 file:px-3 file:border-0 file:bg-slate-500 file:text-white rounded-lg bg-[#7F8EA3] text-white"
-                            type="file"
-                            name="img"
-                            id="img"
-                            onChange={categoryImageHandler}
-                        />
-                    </div>
-                    <div className="input-group mb-5">
-                        <label
-                            className="block font-semibold mb-3 text-lg"
                             htmlFor="name"
                         >
                             Category Name
@@ -80,6 +73,21 @@ const AddCategory = () => {
                             id="name"
                             onChange={categoryInputHandler}
                             placeholder="Create Category"
+                        />
+                    </div>
+                    <div className="input-group mb-5">
+                        <label
+                            className="block font-semibold mb-3 text-lg"
+                            htmlFor="img"
+                        >
+                            Image For Category
+                        </label>
+                        <input
+                            className="block w-full py-3.5 file:py-2.5  px-5 focus:outline-none file:px-3 file:border-0 file:bg-slate-500 file:text-white rounded-lg bg-[#7F8EA3] text-white"
+                            type="text"
+                            name="img"
+                            id="img"
+                            onChange={categoryImageHandler}
                         />
                     </div>
                     <div className="">

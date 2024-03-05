@@ -66,8 +66,12 @@ const AddTask = () => {
                             >
                                 Start
                             </label>
-
-                            <select
+                            <input
+                                className=" bg-slate-400 block w-full p-3 rounded-lg"
+                                type="time"
+                                name="startTime"
+                            />
+                            {/* <select
                                 className="w-full bg-slate-400 focus:outline-none py-3.5 px-5 rounded-lg block"
                                 name="startTime"
                                 id="time1"
@@ -77,7 +81,7 @@ const AddTask = () => {
                                         {time.label}
                                     </option>
                                 ))}
-                            </select>
+                            </select> */}
                         </div>
                         <div className="input-group flex-1">
                             <label
@@ -86,8 +90,12 @@ const AddTask = () => {
                             >
                                 End
                             </label>
-
-                            <select
+                            <input
+                                className=" bg-slate-400 block w-full p-3 rounded-lg"
+                                type="time"
+                                name="startTime"
+                            />
+                            {/* <select
                                 className="w-full bg-slate-400 focus:outline-none py-3.5 px-5 rounded-lg block"
                                 name="endTime"
                                 id="time2"
@@ -97,7 +105,7 @@ const AddTask = () => {
                                         {time.label}
                                     </option>
                                 ))}
-                            </select>
+                            </select> */}
                         </div>
                     </div>
                     <div className="input-group mb-5">
