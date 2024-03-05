@@ -18,17 +18,17 @@ export const Category = ({ img, title }) => {
     );
 };
 
-export const AddCategory = () => {
+export const AllCategory = () => {
     return (
         <div>
             <div className="img-box aspect-square w-16">
                 <img
                     className="block bg-slate-300 p-5 rounded-full aspect-square w-full h-full"
-                    src={addMore.Plus.icon}
+                    src={addMore.All.icon}
                     alt="This is icon"
                 />
                 <p className="font-semibold text-sm text-center">
-                    {addMore.Plus.title}
+                    {addMore.All.title}
                 </p>
             </div>
         </div>

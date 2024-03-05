@@ -17,66 +17,61 @@ import all from "../assets/img/Category_img/All.png";
 export const CategoryIcon = [
     {
         id: 1,
-        icon: all,
-        title: "All",
-    },
-    {
-        id: 2,
         icon: briefcase,
         title: "Business",
     },
     {
-        id: 3,
+        id: 2,
         icon: car,
         title: "Car",
     },
     {
-        id: 4,
+        id: 3,
         icon: code,
         title: "Code",
     },
     {
-        id: 5,
+        id: 4,
         icon: code1,
         title: "Programming",
     },
     {
-        id: 6,
+        id: 5,
         icon: computer,
         title: "Computer",
     },
     {
-        id: 7,
+        id: 6,
         icon: database,
         title: "Database",
     },
     {
-        id: 8,
+        id: 7,
         icon: degree,
         title: "School",
     },
     {
-        id: 9,
+        id: 8,
         icon: fashion,
         title: "Clothes",
     },
     {
-        id: 10,
+        id: 9,
         icon: food,
         title: "Food",
     },
     {
-        id: 11,
+        id: 10,
         icon: phone,
         title: "Phone",
     },
     {
-        id: 12,
+        id: 11,
         icon: sport,
         title: "Sport",
     },
     {
-        id: 13,
+        id: 12,
         icon: target,
         title: "Design",
     },
@@ -92,5 +87,10 @@ export const addMore = {
         id: 2,
         icon: plus2,
         title: "Add Task",
+    },
+    All: {
+        id: 3,
+        icon: all,
+        title: "All",
     },
 };

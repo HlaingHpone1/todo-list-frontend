@@ -2,7 +2,7 @@ export const tasks = [
     {
         taskName: "Work on Client Projects 1",
         time: "8Am-*9Am",
-        categoryFK: 7,
+        categoryFK: 1,
     },
     {
         taskName: "Work on Client Projects 2",

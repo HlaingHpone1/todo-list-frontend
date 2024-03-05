@@ -1,11 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { AddCategoryButton } from "../components/btn/Button";
 import { Link } from "react-router-dom";
 
 const AddCategory = () => {
+    const [inputData, setInputData] = useState({
+        name: "",
+        image: null,
+    });
+
+    const categoryInputHandler = (e) => {
+        const categoryName = e.target.value;
+        setInputData({
+            ...inputData,
+            name: categoryName,
+        });
+    };
+
+    const categoryImageHandler = (e) => {
+        const file = e.target.files[0].name;
+        setInputData({
+            ...inputData,
+            image: file,
+        });
+    };
+
+    const submitHandler = (e) => {
+        e.preventDefault();
+        if (!inputData.image || !inputData.name) {
+            alert("Please fill out all required fields.");
+        }
+    };
+
+    console.log(inputData);
+
     return (
-        <div className="bg-slate-200 p-10 rounded-2xl">
+        <div className="bg-slate-200 p-10 shadow-lg rounded-2xl">
             <div className="back-icon mb-5">
                 <Link to="/">
                     <FaArrowLeftLong className="size-6" />
@@ -15,7 +45,12 @@ const AddCategory = () => {
                 <h2 className="text-3xl font-semibold mb-3">Add Category</h2>
             </div>
             <div className="category-form mb-8">
-                <form action="">
+                <form
+                    action=""
+                    method="POST"
+                    encType="multipart/form-data"
+                    onSubmit={submitHandler}
+                >
                     <div className="input-group mb-5">
                         <label
                             className="block font-semibold mb-3 text-lg"
@@ -28,6 +63,7 @@ const AddCategory = () => {
                             type="file"
                             name="img"
                             id="img"
+                            onChange={categoryImageHandler}
                         />
                     </div>
                     <div className="input-group mb-5">
@@ -42,6 +78,7 @@ const AddCategory = () => {
                             type="text"
                             name="name"
                             id="name"
+                            onChange={categoryInputHandler}
                             placeholder="Create Category"
                         />
                     </div>

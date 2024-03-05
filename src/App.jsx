@@ -5,12 +5,12 @@ import Router from "./components/router/Router";
 function App() {
     return (
         <BrowserRouter>
-            <div className="">
-                {/* <Link to="/">Home</Link>
+            <div className="h-screen flex items-center">
+                <Link to="/">Home</Link>
                 <Link to="/category">Category</Link>
-                <Link to="/task">Task</Link> */}
+                <Link to="/task">Task</Link>
 
-                <div className="max-w-500px mx-auto">
+                <div className="w-[500px] mx-auto">
                     <Router />
                 </div>
             </div>

@@ -2,18 +2,18 @@ import React, { useRef, useState } from "react";
 import { CgMenuLeft } from "react-icons/cg";
 import { RiSearchLine } from "react-icons/ri";
 import { IoNotificationsOutline } from "react-icons/io5";
-import { Category } from "../components/categoryfeild/Category";
+import { Category, AllCategory } from "../components/categoryfeild/Category";
 import { CategoryIcon, addMore } from "../components/img";
-import Task from "../components/taskFeild/Task";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 import { AddTaskButton } from "../components/btn/Button";
 import { Link } from "react-router-dom";
 import { tasks } from "../components/demo";
+import Task from "../components/taskFeild/Task";
 
 const Home = () => {
     const sliderRef = useRef(null);
     const [filterTasks, setFilteredTasks] = useState(tasks);
-    const [selectedCategory, setSelectedCategory] = useState(CategoryIcon[0]);
+    const [selectedCategory, setSelectedCategory] = useState(null);
 
     const slideLeft = () => {
         if (sliderRef.current) {
@@ -41,24 +41,18 @@ const Home = () => {
     };
 
     const categoryHandler = (id) => {
-        if (id === 1) {
-            setFilteredTasks(tasks);
-        } else {
-            const filteredTasks = tasks.filter(
-                (task) => task.categoryFK === id
-            );
-            setFilteredTasks(filteredTasks);
-            setSelectedCategory(id);
-        }
+        const filteredTasks = tasks.filter((task) => task.categoryFK === id);
+        setFilteredTasks(filteredTasks);
+        setSelectedCategory(id);
     };
 
     const clearFilter = () => {
         setFilteredTasks(tasks);
-        setSelectedCategory(CategoryIcon[0]);
+        setSelectedCategory(null);
     };
 
     return (
-        <div className=" bg-slate-200 p-10 rounded-2xl">
+        <div className=" bg-slate-200 shadow-lg p-10 rounded-2xl">
             <div className="icon-nav flex justify-between mb-8">
                 <div className="menu-icon">
                     <CgMenuLeft className="size-6" />
@@ -99,6 +93,9 @@ const Home = () => {
                         onWheel={handleScroll}
                     >
                         <div className="category-wrap flex space-x-5 items-start">
+                            <button onClick={clearFilter}>
+                                <AllCategory />
+                            </button>
                             {CategoryIcon.map((category) => (
                                 <button
                                     key={category.id}
@@ -127,7 +124,7 @@ const Home = () => {
                     <div className="title text-xl font-semibold ">
                         Today's Tasks
                     </div>
-                    {selectedCategory.id !== 1 && (
+                    {selectedCategory != null && (
                         <button onClick={clearFilter}>Clear Filter</button>
                     )}
                 </div>
@@ -150,7 +147,7 @@ const Home = () => {
                 </div>
             </div>
             <div className="">
-                <AddTaskButton path="/task" />
+                <AddTaskButton />
             </div>
         </div>
     );

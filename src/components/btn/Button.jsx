@@ -1,13 +1,13 @@
 import React from "react";
 import { addMore } from "../img";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-export const AddTaskButton = ({ path }) => {
+export const AddTaskButton = () => {
     return (
         <div>
-            <Link
+            <button
+                type="submit"
                 className="flex items-center justify-center w-full bg-violet-500 text-white py-5 rounded-lg"
-                to={path}
             >
                 <img
                     className="size-5 me-3"
@@ -15,7 +15,7 @@ export const AddTaskButton = ({ path }) => {
                     alt="This is icon"
                 />{" "}
                 Add Task
-            </Link>
+            </button>
         </div>
     );
 };
@@ -23,9 +23,9 @@ export const AddTaskButton = ({ path }) => {
 export const AddCategoryButton = () => {
     return (
         <div>
-            <Link
+            <button
+                type="submit"
                 className="flex items-center justify-center w-full bg-violet-500 text-white py-5 rounded-lg"
-                to="/"
             >
                 <img
                     className="size-5 me-3"
@@ -33,7 +33,7 @@ export const AddCategoryButton = () => {
                     alt="This is icon"
                 />{" "}
                 Add Category
-            </Link>
+            </button>
         </div>
     );
 };

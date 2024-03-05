@@ -13,7 +13,7 @@ const AddTask = () => {
     console.log(myanmarTime);
 
     return (
-        <div className="bg-slate-200 p-10 rounded-2xl">
+        <div className="bg-slate-200 p-10 shadow-lg rounded-2xl">
             <div className="back-icon mb-5">
                 <Link to="/">
                     <FaArrowLeftLong className="size-6" />
@@ -121,7 +121,7 @@ const AddTask = () => {
                         </select>
                     </div>
                     <div className="">
-                        <AddTaskButton path="/" />
+                        <AddTaskButton />
                     </div>
                 </form>
             </div>
