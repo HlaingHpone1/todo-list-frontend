@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { IoClose } from "react-icons/io5";
 import { FaRegEdit } from "react-icons/fa";
 
-const Task = ({ taskName, time, categoryFK }) => {
+const Task = ({ taskName, startTime, endTime, categoryFK }) => {
     const [isChecked, setIsChecked] = useState(false);
     const uniqueId = uuidv4();
 
@@ -35,9 +35,11 @@ const Task = ({ taskName, time, categoryFK }) => {
                     >
                         {taskName}
                     </label>
-                    <p className="text-base" htmlFor={time}>
-                        {time}{" "}
-                    </p>
+                    <div className="duration flex items-center">
+                        <p className="text-base">{startTime}</p>
+                        <span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
+                        <p className="text-base">{endTime}</p>
+                    </div>
                 </div>
                 <input type="hidden" name="categoryFK" value={categoryFK} />
             </div>

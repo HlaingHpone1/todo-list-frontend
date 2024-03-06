@@ -10,6 +10,8 @@ const AddCategory = () => {
         image: "",
     });
 
+    const apiUrl = "http://localhost:8080/categories";
+
     const categoryInputHandler = (e) => {
         const categoryName = e.target.value;
         setInputData({
@@ -30,17 +32,16 @@ const AddCategory = () => {
         e.preventDefault();
         if (!inputData.image || !inputData.name) {
             alert("Please fill out all required fields.");
+        } else {
+            axios
+                .post(apiUrl, { name: inputData.name, imgUrl: inputData.image })
+                .then(() => {
+                    window.location.href = "/";
+                    // window.location.reload();
+                })
+                .catch((error) => console.error("Error" + error));
         }
     };
-
-    console.log(inputData);
-
-    const apiUrl = "http://localhost:8080/categories";
-
-    // await axios.post(apiUrl, {name: inputData.name, imageUrl: inputData.image})
-    // .then(value => console.log(value));
-
-    return;
 
     return (
         <div className="bg-slate-200 p-10 shadow-lg rounded-2xl">
@@ -73,6 +74,7 @@ const AddCategory = () => {
                             id="name"
                             onChange={categoryInputHandler}
                             placeholder="Create Category"
+                            maxlength="25"
                         />
                     </div>
                     <div className="input-group mb-5">
@@ -83,11 +85,12 @@ const AddCategory = () => {
                             Image For Category
                         </label>
                         <input
-                            className="block w-full py-3.5 file:py-2.5  px-5 focus:outline-none file:px-3 file:border-0 file:bg-slate-500 file:text-white rounded-lg bg-[#7F8EA3] text-white"
+                            className="block w-full py-3.5 file:py-2.5  px-5 focus:outline-none file:px-3 file:border-0 file:bg-slate-500 file:text-white rounded-lg bg-[#7F8EA3] text-white placeholder:text-gray-900"
                             type="text"
                             name="img"
                             id="img"
                             onChange={categoryImageHandler}
+                            placeholder="Image"
                         />
                     </div>
                     <div className="">

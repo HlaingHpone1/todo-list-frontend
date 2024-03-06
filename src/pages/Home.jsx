@@ -1,19 +1,24 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { CgMenuLeft } from "react-icons/cg";
 import { RiSearchLine } from "react-icons/ri";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { Category, AllCategory } from "../components/categoryfeild/Category";
 import { CategoryIcon, addMore } from "../components/img";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
-import { AddTaskButton } from "../components/btn/Button";
+import { HomeAddTaskButton } from "../components/btn/Button";
 import { Link } from "react-router-dom";
-import { tasks } from "../components/demo";
 import Task from "../components/taskFeild/Task";
+import axios from "axios";
+import { IoClose } from "react-icons/io5";
+import { FaRegEdit } from "react-icons/fa";
 
 const Home = () => {
     const sliderRef = useRef(null);
+    const [tasks, setTasks] = useState([]);
     const [filterTasks, setFilteredTasks] = useState(tasks);
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [showIcons, setShowIcons] = useState(null);
+    const [categories, setCategories] = useState([]);
 
     const slideLeft = () => {
         if (sliderRef.current) {
@@ -41,15 +46,86 @@ const Home = () => {
     };
 
     const categoryHandler = (id) => {
-        const filteredTasks = tasks.filter((task) => task.categoryFK === id);
+        const filteredTasks = tasks.filter((task) => task.category?.id == id);
+
+        console.warn(filteredTasks);
+
         setFilteredTasks(filteredTasks);
         setSelectedCategory(id);
+    };
+
+    const handleDoubleClick = (e, id) => {
+        e.stopPropagation();
+        setShowIcons(id);
     };
 
     const clearFilter = () => {
         setFilteredTasks(tasks);
         setSelectedCategory(null);
     };
+
+    const apiUrl = "http://localhost:8080/categories";
+    const apiUrl1 = "http://localhost:8080/tasks";
+
+    // useEffect(() => {
+    //     axios
+    //         .get(apiUrl)
+    //         .then((res) => {
+    //             setCategories(res.data);
+    //         })
+    //         .catch((error) => console.error("Category have:" + error));
+
+    //     axios
+    //         .get(apiUrl1)
+    //         .then((res) => {
+    //             // console.log(res);
+    //             // console.log(res.data);
+    //             setTasks(res.data);
+    //         })
+    //         .catch((error) => console.error("Task have:" + error));
+    // }, []);
+
+    useEffect(() => {
+        axios
+            .get(apiUrl1)
+            .then((res) => {
+                setTasks(res.data);
+
+                // Nested Axios call for categories
+                axios
+                    .get(apiUrl)
+                    .then((res) => {
+                        setCategories(res.data);
+                    })
+                    .catch((error) =>
+                        console.error("Category error: " + error)
+                    );
+            })
+            .catch((error) => console.error("Task error: " + error));
+    }, []);
+
+    const editCategoryHandler = (categoryFK) => {
+        console.log("this is edit" + categoryFK);
+    };
+
+    const deleteCategoryHandler = (categoryFK) => {
+        const delete_api = `http://localhost:8080/categories/${categoryFK}`;
+
+        axios
+            .delete(delete_api)
+            .then((response) => {
+                setCategories(
+                    categories.filter((category) => category.id !== categoryFK)
+                );
+            })
+            .catch((error) => {
+                console.error("Error deleting category:", error);
+            });
+    };
+
+    // console.log(tasks.startTime);
+
+    // console.log(new Date().getHours());
 
     return (
         <div className=" bg-slate-200 shadow-lg p-10 rounded-2xl">
@@ -84,7 +160,7 @@ const Home = () => {
                 </div>
                 <div className="flex items-center">
                     <MdChevronLeft
-                        className="opacity-50 cursor-pointer hover:opacity-100 size-28"
+                        className="opacity-50 cursor-pointer hover:opacity-100 size-14"
                         onClick={slideLeft}
                     />
                     <div
@@ -96,15 +172,41 @@ const Home = () => {
                             <button onClick={clearFilter}>
                                 <AllCategory />
                             </button>
-                            {CategoryIcon.map((category) => (
+                            {categories.map((category) => (
                                 <button
+                                    className="Category"
                                     key={category.id}
                                     onClick={() => categoryHandler(category.id)}
+                                    onDoubleClick={(e) =>
+                                        handleDoubleClick(e, category.id)
+                                    }
                                 >
                                     <Category
-                                        img={category.icon}
-                                        title={category.title}
+                                        img={category.imgUrl}
+                                        title={category.name}
                                     />
+                                    {showIcons === category.id && (
+                                        <div className="mt-3 icons flex justify-center items-center space-x-3">
+                                            <a
+                                                onClick={() =>
+                                                    editCategoryHandler(
+                                                        category.id
+                                                    )
+                                                }
+                                            >
+                                                <FaRegEdit className="size-5 text-blue-500" />
+                                            </a>
+                                            <a
+                                                onClick={() =>
+                                                    deleteCategoryHandler(
+                                                        category.id
+                                                    )
+                                                }
+                                            >
+                                                <IoClose className="size-5 text-red-500" />
+                                            </a>
+                                        </div>
+                                    )}
                                 </button>
                             ))}
                             {/* <Link to="/category">
@@ -113,7 +215,7 @@ const Home = () => {
                         </div>
                     </div>
                     <MdChevronRight
-                        className="opacity-50 cursor-pointer hover:opacity-100 size-28"
+                        className="opacity-50 cursor-pointer hover:opacity-100 size-14"
                         onClick={slideRight}
                     />
                 </div>
@@ -134,12 +236,13 @@ const Home = () => {
                             <p>No tasks available for this category</p>
                         )}
                         <div className="task-wrap space-y-5 ">
-                            {filterTasks.map((task, index) => (
+                            {filterTasks.map((task) => (
                                 <Task
-                                    key={index}
-                                    taskName={task.taskName}
-                                    time={task.time}
-                                    categoryFK={task.categoryFK}
+                                    key={task.id}
+                                    taskName={task.label}
+                                    startTime={task.startTime}
+                                    endTime={task.endTime}
+                                    categoryFK={task.category}
                                 />
                             ))}
                         </div>
@@ -147,7 +250,9 @@ const Home = () => {
                 </div>
             </div>
             <div className="">
-                <AddTaskButton />
+                <Link to="/task">
+                    <HomeAddTaskButton />
+                </Link>
             </div>
         </div>
     );

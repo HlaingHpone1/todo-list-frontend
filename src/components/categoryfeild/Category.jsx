@@ -6,7 +6,7 @@ export const Category = ({ img, title }) => {
         <div>
             <div className="img-box aspect-square w-16 space-y-2">
                 <img
-                    className="block bg-slate-300 p-5 rounded-full aspect-square w-full h-full"
+                    className="block bg-slate-300 p-4 rounded-full aspect-square w-full h-full"
                     src={img}
                     alt="This is icon"
                 />
@@ -23,7 +23,7 @@ export const AllCategory = () => {
         <div>
             <div className="img-box aspect-square w-16">
                 <img
-                    className="block bg-slate-300 p-5 rounded-full aspect-square w-full h-full"
+                    className="block bg-slate-300 p-4 rounded-full aspect-square w-full h-full"
                     src={addMore.All.icon}
                     alt="This is icon"
                 />
