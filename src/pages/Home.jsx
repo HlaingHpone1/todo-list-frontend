@@ -90,6 +90,7 @@ const Home = () => {
             .get(apiUrl1)
             .then((res) => {
                 setTasks(res.data);
+                setFilteredTasks(res.data);
 
                 // Nested Axios call for categories
                 axios
@@ -117,6 +118,7 @@ const Home = () => {
                 setCategories(
                     categories.filter((category) => category.id !== categoryFK)
                 );
+                // window.location.reload();
             })
             .catch((error) => {
                 console.error("Error deleting category:", error);
@@ -187,7 +189,8 @@ const Home = () => {
                                     />
                                     {showIcons === category.id && (
                                         <div className="mt-3 icons flex justify-center items-center space-x-3">
-                                            <a
+                                            <Link
+                                                to={`/categoryUpdate/${category.id}`}
                                                 onClick={() =>
                                                     editCategoryHandler(
                                                         category.id
@@ -195,7 +198,7 @@ const Home = () => {
                                                 }
                                             >
                                                 <FaRegEdit className="size-5 text-blue-500" />
-                                            </a>
+                                            </Link>
                                             <a
                                                 onClick={() =>
                                                     deleteCategoryHandler(
@@ -222,13 +225,16 @@ const Home = () => {
             </div>
 
             <div className="task-container mb-5">
-                <div className="task-header flex justify-between items-center mb-5">
+                <div className="task-header flex justify-between items-center mb-2">
                     <div className="title text-xl font-semibold ">
                         Today's Tasks
                     </div>
                     {selectedCategory != null && (
                         <button onClick={clearFilter}>Clear Filter</button>
                     )}
+                </div>
+                <div className="mb-5">
+                    <p>There are {tasks.length} task for todays </p>
                 </div>
                 <div className="task-container ">
                     <div className="task-scroll-container overflow-y-scroll max-h-[320px]  scroll-smooth scroll scrollbar-hide ">
@@ -242,7 +248,7 @@ const Home = () => {
                                     taskName={task.label}
                                     startTime={task.startTime}
                                     endTime={task.endTime}
-                                    categoryFK={task.category}
+                                    deleteId={task.id}
                                 />
                             ))}
                         </div>

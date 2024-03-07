@@ -65,7 +65,7 @@ const AddTask = () => {
         });
     };
 
-    // console.log(inputData);
+    console.log(inputData);
 
     const [categories, setCategories] = useState([]);
     const apiUrl = "http://localhost:8080/categories";
@@ -75,14 +75,14 @@ const AddTask = () => {
             .get(apiUrl)
             .then((res) => {
                 setCategories(res.data);
-                // console.log(res.data);
+                console.log(res.data);
             })
             .catch((error) => console.error("Category have:" + error));
     }, []);
 
     const apiPostUrl = "http://localhost:8080/tasks";
 
-    const repeatOptions = ["EVERY_DAY", "EVERY_WEEK", "EVERY_MONTH"];
+    const repeatOptions = ["EVERYDAY", "EVERY_WEEK", "EVERY_MONTH"];
 
     const taskRepeatInputHandler = (e) => {
         const taskRepeat = e.target.value;
