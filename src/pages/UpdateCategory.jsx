@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { AddCategoryButton } from "../components/btn/Button";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 
 const UpdateCategory = () => {
@@ -10,7 +10,9 @@ const UpdateCategory = () => {
         image: "",
     });
 
-    // const apiUrl = "http://localhost:8080/categories";
+    const { id } = useParams();
+
+    const apiUrl = "http://localhost:8080/categories";
 
     const categoryInputHandler = (e) => {
         const categoryName = e.target.value;
@@ -28,20 +30,34 @@ const UpdateCategory = () => {
         });
     };
 
+    const apiUrl1 = `http://localhost:8080/categories/${id}`;
+
+    useEffect(() => {
+        axios.get(apiUrl1).then((res) =>
+            setInputData({
+                ...inputData,
+                name: res.data.name,
+                image: res.data.imgUrl,
+            })
+        );
+    }, []);
+
     const submitHandler = (e) => {
         e.preventDefault();
         if (!inputData.image || !inputData.name) {
             alert("Please fill out all required fields.");
         } else {
-            // axios
-            //     .post(apiUrl, { name: inputData.name, imgUrl: inputData.image })
-            //     .then(() => {
-            //         window.location.href = "/";
-            //         // window.location.reload();
-            //     })
-            //     .catch((error) => console.error("Error" + error));
+            axios
+                .put(apiUrl, { name: inputData.name, imgUrl: inputData.image })
+                .then(() => {
+                    window.location.href = "/";
+                    // window.location.reload();
+                })
+                .catch((error) => console.error("Error" + error));
         }
     };
+
+    console.log(inputData);
 
     return (
         <div className="bg-slate-200 p-10 shadow-lg rounded-2xl">
@@ -75,6 +91,7 @@ const UpdateCategory = () => {
                             onChange={categoryInputHandler}
                             placeholder="Create Category"
                             maxlength="25"
+                            defaultValue={inputData.name}
                         />
                     </div>
                     <div className="input-group mb-5">
@@ -91,6 +108,7 @@ const UpdateCategory = () => {
                             id="img"
                             onChange={categoryImageHandler}
                             placeholder="Image"
+                            defaultValue={inputData.image}
                         />
                     </div>
                     <div className="">

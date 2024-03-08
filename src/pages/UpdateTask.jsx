@@ -7,7 +7,7 @@
 // const UpdateTask = () => {
 //     const repeatOptions = ["EVERYDAY", "EVERY_WEEK", "EVERY_MONTH"];
 //     const [categories, setCategories] = useState([]);
-//     const [tasks, setTasks] = useState([]);
+//     const [taskasdf, setTasks] = useState([]);
 //     const { id } = useParams();
 
 //     // const currentDate = new Date();
@@ -101,19 +101,14 @@
 //     const apiUrl = `http://localhost:8080/tasks/${id}`;
 //     const apiUrl1 = `http://localhost:8080/categories`;
 
-//     const fetchData = async () => {
-//         const response = await axios.get(apiUrl);
-
-//         return setTasks(response.data);
-//     };
-
-//     useEffect(() => {}, []);
-
-//     // const categoryId = tasks.category.id;
-
-//     // console.log(categoryId);
-//     // console.log(tasks.category);
-//     console.log(tasks.category);
+//     useEffect(() => {
+//         axios
+//             .get(apiUrl)
+//             .then((res) => {
+//                 setTasks(res.data);
+//             })
+//             .catch((error) => console.error("Task have:" + error));
+//     }, []);
 
 //     useEffect(() => {
 //         axios
@@ -124,16 +119,22 @@
 //             .catch((error) => console.error("Task have:" + error));
 //     }, []);
 
-//     // console.warn(categories);
-//     // console.log(tasks);
+//     const fetchDate = async () => {
+//         const response = await axios.get(apiUrl);
+//         return response?.data;
+//     };
 
-//     const { data, status } = useQuery("users", fetchData);
+//     const { data, isLoading, error, refetch } = useQuery("productData", () =>
+//         fetchDate()
+//     );
+
+//     if (isLoading) {
+//         return <h1>Loading ....</h1>;
+//     }
 
 //     return (
-//         <div className="App">
-//             {status === "error" && <p>Error fetching data</p>}
-//             {status === "loading" && <p>Fetching data...</p>}
-//             {status === "success" && (
+//         <div className="">
+//             {data?.map((tasks) => (
 //                 <div className="bg-slate-200 p-10 shadow-lg rounded-2xl">
 //                     <div className="back-icon mb-5">
 //                         <Link to="/">
@@ -295,7 +296,7 @@
 //                         </form>
 //                     </div>
 //                 </div>
-//             )}
+//             ))}
 //         </div>
 //     );
 // };
@@ -305,16 +306,23 @@
 import React, { useState, useEffect } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { AddTaskButton } from "../components/btn/Button";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
-import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
 
-const UpdateTask = () => {
-    const repeatOptions = ["EVERYDAY", "EVERY_WEEK", "EVERY_MONTH"];
-    const [task, setTask] = useState([]);
+const AddTask = () => {
+    // const currentDate = new Date();
+    // const myanmarTime = new Date(currentDate.getTime() + 6.5 * 60 * 60 * 1000)
+    //     .toISOString()
+    //     .split("T")[0];
+
+    // console.log(myanmarTime);
+
     const { id } = useParams();
+    const [tasks, setTasks] = useState([]);
 
     const [inputData, setInputData] = useState({
+        id: "",
         label: "",
         startTime: "",
         endTime: "",
@@ -323,24 +331,6 @@ const UpdateTask = () => {
             id: "",
         },
     });
-
-    const {
-        data: tasks,
-        status: taskStatus,
-        error: taskError,
-    } = useQuery(["task", id], () =>
-        axios.get(`http://localhost:8080/tasks/${id}`).then((res) => {
-            setTask(res.data);
-        })
-    );
-
-    const {
-        data: categories,
-        status: categoryStatus,
-        error: categoryError,
-    } = useQuery("categories", () =>
-        axios.get("http://localhost:8080/categories").then((res) => res.data)
-    );
 
     const inputHandler1 = (e) => {
         const name = e.target.value;
@@ -366,16 +356,17 @@ const UpdateTask = () => {
         });
     };
 
-    const taskRepeatInputHandler = (e) => {
-        const taskRepeat = e.target.value;
+    const inputHandler4 = (e) => {
+        const repeat = e.target.value;
         setInputData({
             ...inputData,
-            repeatTime: taskRepeat,
+            repeatTime: repeat,
         });
     };
 
     const inputHandler5 = (e) => {
         const category = e.target.value;
+        // console.log(category);
         setInputData({
             ...inputData,
             category: {
@@ -384,8 +375,62 @@ const UpdateTask = () => {
         });
     };
 
+    // console.log(inputData);
+
+    const [categories, setCategories] = useState([]);
+    const apiUrl = "http://localhost:8080/categories";
+    const apiUrl1 = `http://localhost:8080/tasks/${id}`;
+
+    useEffect(() => {
+        axios
+            .get(apiUrl)
+            .then((res) => {
+                setCategories(res.data);
+                // console.log(res.data);
+            })
+            .catch((error) => console.error("Category have:" + error));
+    }, []);
+
+    useEffect(() => {
+        axios
+            .get(apiUrl1)
+            .then((res) => {
+                setInputData({
+                    ...inputData,
+                    id: res.data.id,
+                    label: res.data.label,
+                    startTime: res.data.startTime,
+                    endTime: res.data.endTime,
+                    repeatTime: res.data.repeateType,
+                    category: {
+                        id: res.data.category.id,
+                    },
+                });
+                // console.log(res.data);
+            })
+            .catch((error) => console.error("Category have:" + error));
+    }, []);
+
+    console.log(inputData);
+
+    const apiPostUrl = "http://localhost:8080/tasks";
+
+    const repeatOptions = ["EVERYDAY", "EVERY_WEEK", "EVERY_MONTH"];
+
+    const taskRepeatInputHandler = (e) => {
+        const taskRepeat = e.target.value;
+        setInputData({
+            ...inputData,
+            repeatTime: taskRepeat,
+        });
+    };
+
     const submitHandler = (e) => {
         e.preventDefault();
+        // console.log(inputData.category.id);
+        // console.log(inputData.category);
+
+        const apiPutUrl = `http://localhost:8080/tasks/${id}`;
 
         if (
             !inputData.label ||
@@ -397,7 +442,8 @@ const UpdateTask = () => {
             alert("Please fill out all required fields.");
         } else {
             axios
-                .post(apiPostUrl, {
+                .put(apiPutUrl, {
+                    id: inputData.id,
                     label: inputData.label,
                     startTime: inputData.startTime,
                     endTime: inputData.endTime,
@@ -414,162 +460,170 @@ const UpdateTask = () => {
     };
 
     return (
-        <div className="App">
-            {taskStatus === "loading" ||
-                (categoryStatus === "loading" && <p>Loading...</p>)}
-            {taskStatus === "error" && (
-                <p>Error fetching task data: {taskError.message}</p>
-            )}
-            {categoryStatus === "error" && (
-                <p>Error fetching category data: {categoryError.message}</p>
-            )}
-            {taskStatus === "success" && categoryStatus === "success" && (
-                <div className="bg-slate-200 p-10 shadow-lg rounded-2xl">
-                    <div className="back-icon mb-5">
-                        <Link to="/">
-                            <FaArrowLeftLong className="size-6" />
-                        </Link>
-                    </div>
-                    <div className="header ">
-                        <h2 className="text-3xl font-semibold mb-3">
-                            Add Task
-                        </h2>
-                    </div>
-                    <div className="category-form mb-8">
-                        <form
-                            action=""
-                            method="POST"
-                            encType="multipart/form-data"
-                            onSubmit={submitHandler}
+        <div className="bg-slate-200 p-10 shadow-lg rounded-2xl">
+            <div className="back-icon mb-5">
+                <Link to="/">
+                    <FaArrowLeftLong className="size-6" />
+                </Link>
+            </div>
+            <div className="header ">
+                <h2 className="text-3xl font-semibold mb-3">Update Task</h2>
+            </div>
+            <div className="category-form mb-8">
+                <form
+                    action=""
+                    method="POST"
+                    encType="multipart/form-data"
+                    onSubmit={submitHandler}
+                >
+                    <input type="hidden" name="id" value={inputData.id} />
+                    <div className="input-group mb-5">
+                        <label
+                            className="block font-semibold mb-3 text-lg"
+                            htmlFor="name"
                         >
-                            <div className="input-group mb-5">
-                                <label
-                                    className="block font-semibold mb-3 text-lg"
-                                    htmlFor="name"
-                                >
-                                    Label
-                                </label>
-                                <input
-                                    className="w-full block bg-slate-400 focus:outline-none py-3.5 px-5 rounded-lg placeholder:text-gray-900"
-                                    type="text"
-                                    name="name"
-                                    id="name"
-                                    placeholder="Create Task"
-                                    autoComplete="off"
-                                    onChange={inputHandler1}
-                                    defaultValue={task.label}
-                                />
-                            </div>
-                            <div className="time flex space-x-4 mb-5">
-                                <div className="input-group flex-1">
-                                    <label
-                                        className="block font-semibold mb-3 text-lg"
-                                        htmlFor="name"
-                                    >
-                                        Start
-                                    </label>
-                                    <input
-                                        className=" bg-slate-400 block w-full p-3 rounded-lg"
-                                        type="time"
-                                        name="startTime"
-                                        onChange={inputHandler2}
-                                        defaultValue={task.startTime}
-                                    />
-                                </div>
-                                <div className="input-group flex-1">
-                                    <label
-                                        className="block font-semibold mb-3 text-lg"
-                                        htmlFor="name"
-                                    >
-                                        End
-                                    </label>
-                                    <input
-                                        className=" bg-slate-400 block w-full p-3 rounded-lg"
-                                        type="time"
-                                        name="startTime"
-                                        onChange={inputHandler3}
-                                        defaultValue={task.endTime}
-                                    />
-                                </div>
-                            </div>
-                            <div className="input-group mb-5">
-                                <label
-                                    className="block font-semibold mb-3 text-lg"
-                                    htmlFor="repeatOption"
-                                >
-                                    Repeat
-                                </label>
-
-                                <select
-                                    className="w-full bg-slate-400 focus:outline-none py-3.5 px-5 rounded-lg block"
-                                    name="repeatOption"
-                                    id="repeatOption"
-                                    onChange={taskRepeatInputHandler}
-                                >
-                                    <option selected disabled>
-                                        Plz Select Your Habits
-                                    </option>
-                                    {repeatOptions.map((option, index) => {
-                                        return (
-                                            <option
-                                                onChange={
-                                                    taskRepeatInputHandler
-                                                }
-                                                key={index}
-                                                defaultValue={option}
-                                                selected={
-                                                    task.repeateType === option
-                                                        ? "selected"
-                                                        : ""
-                                                }
-                                            >
-                                                {option}
-                                            </option>
-                                        );
-                                    })}
-                                </select>
-                            </div>
-                            <div className="input-group mb-5">
-                                <label
-                                    className="block font-semibold mb-3 text-lg"
-                                    htmlFor="category"
-                                >
-                                    Category
-                                </label>
-                                <select
-                                    className="w-full bg-slate-400 focus:outline-none py-3.5 px-5 rounded-lg block"
-                                    id="category"
-                                    name="category"
-                                    onChange={inputHandler5}
-                                >
-                                    <option selected disabled>
-                                        Plz Select Your Category
-                                    </option>
-
-                                    {categories.map((category) => (
-                                        <option
-                                            defaultValue={category.id}
-                                            key={category.id}
-                                            selected={
-                                                task.category.id == category.id
-                                                    ? "selected"
-                                                    : ""
-                                            }
-                                        >
-                                            {category.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className="">
-                                <AddTaskButton />
-                            </div>
-                        </form>
+                            Label
+                        </label>
+                        <input
+                            className="w-full block bg-slate-400 focus:outline-none py-3.5 px-5 rounded-lg placeholder:text-gray-900"
+                            type="text"
+                            name="name"
+                            id="name"
+                            placeholder="Create Task"
+                            autoComplete="off"
+                            onChange={inputHandler1}
+                            value={inputData.label}
+                        />
                     </div>
-                </div>
-            )}
+                    {/* <div className="input-group mb-5">
+                        <label
+                            className="block font-semibold mb-3 text-lg"
+                            htmlFor="name"
+                        >
+                            Date
+                        </label>
+                        <input
+                            className="w-full block bg-slate-400 focus:outline-none py-3.5 px-5 rounded-lg placeholder:text-gray-900"
+                            type="date"
+                            name="name"
+                            id="name"
+                            placeholder="Create Task"
+                            autoComplete="off"
+                            min={myanmarTime}
+                            defaultValue={myanmarTime}
+                        />
+                    </div> */}
+                    <div className="time flex space-x-4 mb-5">
+                        <div className="input-group flex-1">
+                            <label
+                                className="block font-semibold mb-3 text-lg"
+                                htmlFor="name"
+                            >
+                                Start
+                            </label>
+                            <input
+                                className=" bg-slate-400 block w-full p-3 rounded-lg"
+                                type="time"
+                                name="startTime"
+                                onChange={inputHandler2}
+                                value={inputData.startTime}
+                            />
+                        </div>
+                        <div className="input-group flex-1">
+                            <label
+                                className="block font-semibold mb-3 text-lg"
+                                htmlFor="name"
+                            >
+                                End
+                            </label>
+                            <input
+                                className=" bg-slate-400 block w-full p-3 rounded-lg"
+                                type="time"
+                                name="startTime"
+                                onChange={inputHandler3}
+                                value={inputData.endTime}
+                            />
+                        </div>
+                    </div>
+                    <div className="input-group mb-5">
+                        <label
+                            className="block font-semibold mb-3 text-lg"
+                            htmlFor="repeatOption"
+                        >
+                            Repeat
+                        </label>
+
+                        <select
+                            className="w-full bg-slate-400 focus:outline-none py-3.5 px-5 rounded-lg block"
+                            name="repeatOption"
+                            id="repeatOption"
+                            onChange={taskRepeatInputHandler}
+                            value={inputData.repeatTime}
+                        >
+                            <option selected disabled>
+                                Plz Select Your Habits
+                            </option>
+                            {repeatOptions.map((option, index) => {
+                                return (
+                                    <option
+                                        onChange={taskRepeatInputHandler}
+                                        key={index}
+                                        value={option}
+                                    >
+                                        {option}
+                                    </option>
+                                );
+                            })}
+                        </select>
+
+                        {/* <select
+                            className="w-full bg-slate-400 focus:outline-none py-3.5 px-5 rounded-lg block"
+                            name="startTime"
+                            id="time1"
+                            onChange={inputHandler4}
+                        >
+                            <option selected disabled>
+                                Plz Select Your Habits
+                            </option>
+                            {repeatTime.map((time, index) => (
+                                <option key={index} value={time.label}>
+                                    {time.label}
+                                </option>
+                            ))}
+                        </select> */}
+                    </div>
+                    <div className="input-group mb-5">
+                        <label
+                            className="block font-semibold mb-3 text-lg"
+                            htmlFor="category"
+                        >
+                            Category
+                        </label>
+                        <select
+                            className="w-full bg-slate-400 focus:outline-none py-3.5 px-5 rounded-lg block"
+                            id="category"
+                            name="category"
+                            onChange={inputHandler5}
+                            value={inputData.category.id}
+                        >
+                            <option selected disabled>
+                                Plz Select Your Category
+                            </option>
+
+                            {categories.map((category) => (
+                                <option value={category.id} key={category.id}>
+                                    {category.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="">
+                        <AddTaskButton />
+                    </div>
+                </form>
+            </div>
         </div>
     );
 };
 
-export default UpdateTask;
+export default AddTask;
