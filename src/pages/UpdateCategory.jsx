@@ -6,6 +6,7 @@ import axios from "axios";
 
 const UpdateCategory = () => {
     const [inputData, setInputData] = useState({
+        id: "",
         name: "",
         image: "",
     });
@@ -36,6 +37,7 @@ const UpdateCategory = () => {
         axios.get(apiUrl1).then((res) =>
             setInputData({
                 ...inputData,
+                id: res.data.id,
                 name: res.data.name,
                 image: res.data.imgUrl,
             })
@@ -48,7 +50,11 @@ const UpdateCategory = () => {
             alert("Please fill out all required fields.");
         } else {
             axios
-                .put(apiUrl, { name: inputData.name, imgUrl: inputData.image })
+                .put(apiUrl1, {
+                    id: inputData.id,
+                    name: inputData.name,
+                    imgUrl: inputData.image,
+                })
                 .then(() => {
                     window.location.href = "/";
                     // window.location.reload();
@@ -76,6 +82,8 @@ const UpdateCategory = () => {
                     encType="multipart/form-data"
                     onSubmit={submitHandler}
                 >
+                    <input type="hidden" name="id" value={inputData.id} />
+
                     <div className="input-group mb-5">
                         <label
                             className="block font-semibold mb-3 text-lg"
